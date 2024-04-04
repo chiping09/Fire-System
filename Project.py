@@ -7,16 +7,16 @@ def draw_graph(graph, node_pos, edge_colors, start=None, end=None, passed=None):
     plt.figure(figsize=(8, 6))
     plt.title('Nakhon Nayok Fire Station')
 
-    # วาดกราฟของเส้นทาง
+    # สร้างโหนด
     nx.draw(graph, pos=node_pos, with_labels=True, node_color='skyblue', edge_color=edge_colors, width=2)
 
-    # ตั้งเน้นโหนดที่เป็นจุดเริ่มต้นและจุดสิ้นสุด
+    # โหนดที่เป็นจุดเริ่มต้นและจุดสิ้นสุด
     if start:
         nx.draw_networkx_nodes(graph, pos=node_pos, nodelist=[start], node_color='red', node_size=600)
     if end:
         nx.draw_networkx_nodes(graph, pos=node_pos, nodelist=[end], node_color='red', node_size=600)
 
-    # กำหนดโหนดที่ผ่านเป็นสีเขียว
+    # เส้นผ่านแต่ละโหนด
     if passed:
         nx.draw_networkx_nodes(graph, pos=node_pos, nodelist=passed, node_color='lime', node_size=300)
 
@@ -36,9 +36,10 @@ def set_start_ends(graph, end):
 
 def on_submit():
     plt.close()
-    # สร้างกราฟ
+
     network = nx.Graph()
-    # เพิ่มเส้นเชื่อมและกำหนดระยะทาง (เป็นหน่วยกิโลเมตร)
+
+    # สร้างเส้นเชื่อมระหว่างโนหด (หน่วยกิโลเมตร)
     network.add_edge('Station 1', 'Station 2', weight=4.1)
 
     network.add_edge('Station 1', 'ChokNamChai', weight=1.7)
@@ -76,6 +77,8 @@ def on_submit():
                 'Station 2': (0, 1),
                 'Esso1': (0.5, 2),'PTT1': (-1, 1.5), 'Esso2': (-2, 2),'PTT2': (-3, 2.5),
             }
+    
+    # สร้างกราฟ
     end = end_var.get()
     start, end = set_start_ends(network, end)
     shortest_path = nx.shortest_path(network, source=start, target=end, weight='weight')
@@ -89,21 +92,21 @@ root = tk.Tk()
 root.title("Nakhon Nayok Fire Station")
 # กำหนด style
 style = ttk.Style()
-style.configure('TMenubutton', font=('Arial', 16))
-style.configure('Submit.TButton', font=('Arial', 16))
+style.configure('TMenubutton', font=('Arial', 14))
+style.configure('Submit.TButton', font=('Arial', 14))
 
 # สร้าง dropdown menu
-end_label = ttk.Label(root, text="โปรดระบุสถานที่ที่เกิดเหตุไฟไหม้:", font=("Arial", 16), anchor="center")
+end_label = ttk.Label(root, text="โปรดระบุสถานที่ที่เกิดเหตุไฟไหม้:", font=("Arial", 14))
 end_label.grid(row=0, column=0)
 
-end_options = ['เลือกสถานที่','ChokNamChai', 'PT4', 'PT5', 'PTT5', 'Shell1', 'PT-LPG2', 'PTT4', 
-               'Bangchak', 'Esso3', 'PTT3', 'PT-LPG1', 'PT1', 'LPG1', 'PT2', 'PT3', 'Esso1', 'PTT1', 'Esso2', 'PTT2']
+end_options = ['เลือกสถานที่','Bangchak','ChokNamChai','LPG1','PT-LPG1','PT-LPG2','PT1','PT2','PT3','PT4', 'PT5', 'PTT1','PTT2','PTT3','PTT4', 'PTT5', 'Shell1',
+               'Esso1','Esso2','Esso3',]
 end_var = tk.StringVar(root)
 end_var.set(end_options[0])
 
 end_menu = ttk.OptionMenu(root, end_var, *end_options)
 end_menu.grid(row=0, column=1)
-end_menu["menu"].config(font=("Arial", 16))
+end_menu["menu"].config(font=("Arial", 14))
 
 submit_button = ttk.Button(root, text="เลือก", command=on_submit, style='Submit.TButton')
 submit_button.grid(row=0, column=2)
