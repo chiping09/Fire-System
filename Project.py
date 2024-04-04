@@ -39,7 +39,7 @@ def on_submit():
 
     network = nx.Graph()
 
-    # สร้างเส้นเชื่อมระหว่างโนหด (หน่วยกิโลเมตร)
+    # สร้างเส้นเชื่อมระหว่างโนหด (หน่วยเป็นกิโลเมตร)
     network.add_edge('Station 1', 'Station 2', weight=4.1)
 
     network.add_edge('Station 1', 'ChokNamChai', weight=1.7)
@@ -66,7 +66,7 @@ def on_submit():
     network.add_edge('PTT1', 'Esso2', weight=0.6)
     network.add_edge('Esso2', 'PTT2', weight=0.2)
 
-    # กำหนดตำแหน่งของโหนด
+    # กำหนดตำแหน่งของแต่ละโหนด
     node_pos = {'Station 1': (2, 0),  
                 'ChokNamChai': (3.5, -2.5),
                 'PT4': (8, 1), 'PT5': (9, 2),'PTT5': (11, 4),
