@@ -105,7 +105,7 @@ end_menu = ttk.OptionMenu(root, end_var, *end_options)
 end_menu.grid(row=0, column=1)
 end_menu["menu"].config(font=("Arial", 16))
 
-submit_button = ttk.Button(root, text="Submit", command=on_submit, style='Submit.TButton')
+submit_button = ttk.Button(root, text="เลือก", command=on_submit, style='Submit.TButton')
 submit_button.grid(row=0, column=2)
 
 root.mainloop()
