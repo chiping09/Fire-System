@@ -1,3 +1,5 @@
+import tkinter as tk
+from tkinter import ttk
 import networkx as nx
 import matplotlib.pyplot as plt
 
@@ -20,10 +22,7 @@ def draw_graph(graph, node_pos, edge_colors, start=None, end=None, passed=None):
 
     plt.show()
 
-def set_start_end_nodes(graph):
-    # รับค่าจุดที่เกิดเหตุไฟไหม้
-    end = input("โปรดระบุโหนดที่เกิดเหตุไฟไหม้: ")
-
+def set_start_ends(graph, end):
     # หาสถานีที่ใกล้ที่สุดกับจุดเกิดเหตุเพื่อเป็นจุดเริ่มต้น
     min_dist = float('inf')
     nearest_station = None
@@ -35,62 +34,78 @@ def set_start_end_nodes(graph):
 
     return nearest_station, end
 
-# สร้างกราฟ
-network = nx.Graph()
+def on_submit():
+    plt.close()
+    # สร้างกราฟ
+    network = nx.Graph()
+    # เพิ่มเส้นเชื่อมและกำหนดระยะทาง (เป็นหน่วยกิโลเมตร)
+    network.add_edge('Station 1', 'Station 2', weight=4.1)
 
-# เพิ่มเส้นเชื่อมและกำหนดระยะทาง (เป็นหน่วยกิโลเมตร)
-network.add_edge('Station 1', 'Station 2', weight=4.1)
+    network.add_edge('Station 1', 'ChokNamChai', weight=1.7)
+    network.add_edge('ChokNamChai', 'PT4', weight=3.7)
+    network.add_edge('PT4', 'PT5', weight=0.3)
+    network.add_edge('PT5', 'PTT5', weight=1.2)
 
-network.add_edge('Station 1', 'ChokNamChai', weight=1.7)
-network.add_edge('ChokNamChai', 'PT4', weight=3.7)
-network.add_edge('PT4', 'PT5', weight=0.3)
-network.add_edge('PT5', 'PTT5', weight=1.2)
+    network.add_edge('ChokNamChai', 'Shell1', weight=2.5)
+    network.add_edge('Shell1', 'PT-LPG2', weight=1)
 
-network.add_edge('ChokNamChai', 'Shell1', weight=2.5)
-network.add_edge('Shell1', 'PT-LPG2', weight=1)
+    network.add_edge('Station 1', 'PTT4', weight=6.4)
 
-network.add_edge('Station 1', 'PTT4', weight=6.4)
+    network.add_edge('Station 1', 'Bangchak', weight=1.2)
+    network.add_edge('Bangchak', 'Esso3', weight=0.12)
+    network.add_edge('Esso3', 'PTT3', weight=0.55)
+    network.add_edge('PTT3', 'PT-LPG1', weight=0.7)
+    network.add_edge('PT-LPG1', 'PT1', weight=0.85)
+    network.add_edge('PT1', 'LPG1', weight=2.1)
+    network.add_edge('LPG1', 'PT2', weight=0.2)
+    network.add_edge('PT2', 'PT3', weight=0.1)
 
-network.add_edge('Station 1', 'Bangchak', weight=1.2)
-network.add_edge('Bangchak', 'Esso3', weight=0.12)
-network.add_edge('Esso3', 'PTT3', weight=0.55)
-network.add_edge('PTT3', 'PT-LPG1', weight=0.7)
-network.add_edge('PT-LPG1', 'PT1', weight=0.85)
-network.add_edge('PT1', 'LPG1', weight=2.1)
-network.add_edge('LPG1', 'PT2', weight=0.2)
-network.add_edge('PT2', 'PT3', weight=0.1)
+    network.add_edge('Station 2', 'Esso1', weight=2.1)
+    network.add_edge('Station 2', 'PTT1', weight=2.7)
+    network.add_edge('PTT1', 'Esso2', weight=0.6)
+    network.add_edge('Esso2', 'PTT2', weight=0.2)
 
-network.add_edge('Station 2', 'Esso1', weight=2.1)
-network.add_edge('Station 2', 'PTT1', weight=2.7)
-network.add_edge('PTT1', 'Esso2', weight=0.6)
-network.add_edge('Esso2', 'PTT2', weight=0.2)
+    # กำหนดตำแหน่งของโหนด
+    node_pos = {'Station 1': (2, 0),  
+                'ChokNamChai': (3.5, -2.5),
+                'PT4': (8, 1), 'PT5': (9, 2),'PTT5': (11, 4),
+                'Shell1': (6, -5), 'PT-LPG2': (8, -6),
+                'PTT4': (9, 9),
+                'Bangchak': (1, -0.5), 'Esso3': (0.5, -1), 'PTT3': (-1, -1.5), 'PT-LPG1': (-3, -2), 'PT1': (-5, -2), 'LPG1': (-8, -0.5), 'PT2': (-9, 0),'PT3': (-9.5, 0.5),  
 
+                'Station 2': (0, 1),
+                'Esso1': (0.5, 2),'PTT1': (-1, 1.5), 'Esso2': (-2, 2),'PTT2': (-3, 2.5),
+            }
+    end = end_var.get()
+    start, end = set_start_ends(network, end)
+    shortest_path = nx.shortest_path(network, source=start, target=end, weight='weight')
+    edge_colors = ['green' if (u, v) in zip(shortest_path[:-1], shortest_path[1:]) else 'black' for u, v in network.edges()]
+    draw_graph(network, node_pos, edge_colors, start, end, shortest_path)
+    print("เส้นทางที่ใกล้ที่สุดเมื่อมีไฟไหม้:")
+    print(shortest_path)
 
-# กำหนดตำแหน่งของโหนด
-node_pos = {'Station 1': (2, 0),  
-            'ChokNamChai': (3.5, -2.5),
-              'PT4': (8, 1), 'PT5': (9, 2),'PTT5': (11, 4),
-              'Shell1': (6, -5), 'PT-LPG2': (8, -6),
-            'PTT4': (9, 9),
-            'Bangchak': (1, -0.5), 'Esso3': (0.5, -1), 'PTT3': (-1, -1.5), 'PT-LPG1': (-3, -2), 'PT1': (-5, -2), 'LPG1': (-8, -0.5), 'PT2': (-9, 0),'PT3': (-9.5, 0.5),  
+# สร้าง GUI
+root = tk.Tk()
+root.title("Nakhon Nayok Fire Station")
+# กำหนด style
+style = ttk.Style()
+style.configure('TMenubutton', font=('Arial', 16))
+style.configure('Submit.TButton', font=('Arial', 16))
 
-            'Station 2': (0, 1),
-            'Esso1': (0.5, 2),'PTT1': (-1, 1.5), 'Esso2': (-2, 2),'PTT2': (-3, 2.5),
-           }
+# สร้าง dropdown menu
+end_label = ttk.Label(root, text="โปรดระบุสถานที่ที่เกิดเหตุไฟไหม้:", font=("Arial", 16), anchor="center")
+end_label.grid(row=0, column=0)
 
-# แสดงเมนูเพื่อเลือกจุดต้นทางและปลายทาง
-start, end = set_start_end_nodes(network)
+end_options = ['เลือกสถานที่','ChokNamChai', 'PT4', 'PT5', 'PTT5', 'Shell1', 'PT-LPG2', 'PTT4', 
+               'Bangchak', 'Esso3', 'PTT3', 'PT-LPG1', 'PT1', 'LPG1', 'PT2', 'PT3', 'Esso1', 'PTT1', 'Esso2', 'PTT2']
+end_var = tk.StringVar(root)
+end_var.set(end_options[0])
 
-# หาเส้นทางที่ใกล้ที่สุดโดยใช้ shortest_path
-shortest_path = nx.shortest_path(network, source=start, target=end, weight='weight')
+end_menu = ttk.OptionMenu(root, end_var, *end_options)
+end_menu.grid(row=0, column=1)
+end_menu["menu"].config(font=("Arial", 16))
 
-# สร้างลิสต์ของสีสำหรับเส้นทาง
-edge_colors = ['green' if (u, v) in zip(shortest_path[:-1], shortest_path[1:]) else 'black' for u, v in network.edges()]
+submit_button = ttk.Button(root, text="Submit", command=on_submit, style='Submit.TButton')
+submit_button.grid(row=0, column=2)
 
-# วาดกราฟ
-draw_graph(network, node_pos, edge_colors, start, end, shortest_path)
-
-print("เส้นทางที่ใกล้ที่สุดเมื่อมีไฟไหม้:")
-print(shortest_path)
-
-
+root.mainloop()
