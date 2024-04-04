@@ -95,7 +95,7 @@ style = ttk.Style()
 style.configure('TMenubutton', font=('Arial', 14))
 style.configure('Submit.TButton', font=('Arial', 14))
 
-# สร้าง dropdown menu
+# สร้าง menu dropdown 
 end_label = ttk.Label(root, text="โปรดระบุสถานที่ที่เกิดเหตุไฟไหม้:", font=("Arial", 14))
 end_label.grid(row=0, column=0)
 
